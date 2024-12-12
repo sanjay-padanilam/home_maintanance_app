@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ServiceDetailsScreen extends StatelessWidget {
+class ServiceDetailsScreen extends StatefulWidget {
   final String serviceName;
   final IconData serviceIcon;
   final String serviceDescription;
@@ -14,10 +14,17 @@ class ServiceDetailsScreen extends StatelessWidget {
   });
 
   @override
+  _ServiceDetailsScreenState createState() => _ServiceDetailsScreenState();
+}
+
+class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
+  String? _selectedFeature;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(serviceName),
+        title: Text(widget.serviceName),
         centerTitle: true,
       ),
       body: Padding(
@@ -29,11 +36,11 @@ class ServiceDetailsScreen extends StatelessWidget {
               // Header Section
               Row(
                 children: [
-                  Icon(serviceIcon, size: 48, color: Colors.blue),
+                  Icon(widget.serviceIcon, size: 48, color: Colors.blue),
                   SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      serviceName,
+                      widget.serviceName,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -54,7 +61,7 @@ class ServiceDetailsScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                serviceDescription,
+                widget.serviceDescription,
                 style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
               SizedBox(height: 24),
@@ -68,28 +75,41 @@ class ServiceDetailsScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              ...features.map((feature) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.green, size: 20),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            feature,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+              Column(
+                children: widget.features.map((feature) {
+                  return RadioListTile<String>(
+                    title: Text(feature),
+                    value: feature,
+                    groupValue: _selectedFeature,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedFeature = value;
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+
               SizedBox(height: 24),
 
               // Action Button
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add functionality for booking or contacting
+                    if (_selectedFeature != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('You selected: $_selectedFeature'),
+                        ),
+                      );
+                      // Add additional functionality for booking or processing
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select a feature first!'),
+                        ),
+                      );
+                    }
                   },
                   child: Text("Book Now"),
                   style: ElevatedButton.styleFrom(
@@ -105,19 +125,3 @@ class ServiceDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: ServiceDetailsScreen(
-//       serviceName: "Plumbing",
-//       serviceIcon: Icons.plumbing,
-//       serviceDescription: "Professional plumbing services for all your needs. We handle repairs, installations, and maintenance with precision and care.",
-//       features: [
-//         "24/7 Availability",
-//         "Experienced Professionals",
-//         "Affordable Pricing",
-//         "Guaranteed Quality",
-//       ],
-//     ),
-//   ));
-// }

@@ -43,9 +43,8 @@ class HomeScreen extends StatelessWidget {
                             serviceIcon: Dummydb.services[index]['icon'],
                             serviceDescription: Dummydb.services[index]
                                 ['description'],
-                            features: [
-                              Dummydb.services[index]['features'][index]
-                            ],
+                            features: List<String>.from(
+                                Dummydb.services[index]['features']),
                           ),
                         ));
                   },
