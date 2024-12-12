@@ -1,11 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_maintanance_app/dummydb.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/Service_tile.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/recentwork_card.dart';
 import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class Homescreen extends ConsumerStatefulWidget {
+  const Homescreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomescreenState();
+}
+
+class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.sizeOf(context);

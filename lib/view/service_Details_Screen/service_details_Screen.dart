@@ -25,6 +25,7 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.serviceName),
+        backgroundColor: Colors.blue,
         centerTitle: true,
       ),
       body: Padding(
@@ -62,13 +63,16 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               SizedBox(height: 8),
               Text(
                 widget.serviceDescription,
-                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 24),
 
               // Features Section
               Text(
-                "Key Features",
+                "Choose your service ?..",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -78,7 +82,10 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
               Column(
                 children: widget.features.map((feature) {
                   return RadioListTile<String>(
-                    title: Text(feature),
+                    title: Text(
+                      feature,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     value: feature,
                     groupValue: _selectedFeature,
                     onChanged: (value) {
@@ -111,8 +118,12 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                       );
                     }
                   },
-                  child: Text("Book Now"),
+                  child: Text(
+                    "Book Now",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                     textStyle: TextStyle(fontSize: 16),
                   ),
