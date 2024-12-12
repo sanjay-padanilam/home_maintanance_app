@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:home_maintanance_app/dummydb.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/Service_tile.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/recentwork_card.dart';
+import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -32,9 +33,25 @@ class HomeScreen extends StatelessWidget {
                 itemCount: Dummydb.services.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4),
-                itemBuilder: (context, index) => ServiceTile(
-                    Dummydb.services[index]["name"],
-                    Dummydb.services[index]["icon"]),
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ServiceDetailsScreen(
+                            serviceName: Dummydb.services[index]['name'],
+                            serviceIcon: Dummydb.services[index]['icon'],
+                            serviceDescription: Dummydb.services[index]
+                                ['description'],
+                            features: [
+                              Dummydb.services[index]['features'][index]
+                            ],
+                          ),
+                        ));
+                  },
+                  child: ServiceTile(Dummydb.services[index]["name"],
+                      Dummydb.services[index]["icon"]),
+                ),
               )),
           // Top Deals Slider
           Padding(
