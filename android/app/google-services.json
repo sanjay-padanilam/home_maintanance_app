@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "632954893578",
+    "project_id": "sanjaysprojects-a274c",
+    "storage_bucket": "sanjaysprojects-a274c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632954893578:android:f4704d659738f7fd3976f3",
+        "android_client_info": {
+          "package_name": "com.example.flutter_class_nov_13"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Gk5gpiqgzGrxDXszqGboMFXoJwQPk8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632954893578:android:a8f214e37d229d033976f3",
+        "android_client_info": {
+          "package_name": "com.example.full_version_new"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Gk5gpiqgzGrxDXszqGboMFXoJwQPk8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632954893578:android:4ec6cd8e1b64d2263976f3",
+        "android_client_info": {
+          "package_name": "com.example.full_version_newsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Gk5gpiqgzGrxDXszqGboMFXoJwQPk8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632954893578:android:70bff0e109e8079f3976f3",
+        "android_client_info": {
+          "package_name": "com.example.home_maintanance_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Gk5gpiqgzGrxDXszqGboMFXoJwQPk8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
