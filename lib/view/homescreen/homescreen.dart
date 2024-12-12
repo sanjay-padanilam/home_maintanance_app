@@ -1,28 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:home_maintanance_app/dummydb.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/Service_tile.dart';
 import 'package:home_maintanance_app/view/homescreen/widgets/recentwork_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> services = [
-    {
-      'name': 'Electric',
-      'icon': Icons.electric_bolt,
-    },
-    {
-      'name': 'Plumbing',
-      'icon': Icons.plumbing,
-    },
-    {
-      'name': 'Cleaning',
-      'icon': Icons.cleaning_services,
-    },
-    {
-      'name': 'Repairing',
-      'icon': Icons.build,
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.sizeOf(context);
@@ -47,11 +29,12 @@ class HomeScreen extends StatelessWidget {
           Container(
               height: 100,
               child: GridView.builder(
-                itemCount: services.length,
+                itemCount: Dummydb.services.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4),
                 itemBuilder: (context, index) => ServiceTile(
-                    services[index]["name"], services[index]["icon"]),
+                    Dummydb.services[index]["name"],
+                    Dummydb.services[index]["icon"]),
               )),
           // Top Deals Slider
           Padding(
