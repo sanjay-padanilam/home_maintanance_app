@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:home_maintanance_app/view/payment_Screen/payment_Screen.dart';
 
 class ServiceDetailsScreen extends StatefulWidget {
   final String serviceName;
@@ -109,6 +110,11 @@ class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
                           content: Text('You selected: $_selectedFeature'),
                         ),
                       );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentScreen(),
+                          ));
                       // Add additional functionality for booking or processing
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
