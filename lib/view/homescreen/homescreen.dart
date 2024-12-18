@@ -122,8 +122,8 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                         radius: screenWidth > 400
                             ? 24
                             : 16, // Responsive avatar size
-                        backgroundImage:
-                            AssetImage('assets/profile_placeholder.png'),
+                        // backgroundImage:
+                        //     AssetImage('assets/profile_placeholder.png'),
                       ),
                     ],
                   ),
