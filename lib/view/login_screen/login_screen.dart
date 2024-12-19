@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_maintanance_app/view/login_screen/login_screen.dart';
-import 'package:home_maintanance_app/view/registration_screen/registration_screen_controller/registration_screen_controller.dart';
+import 'package:home_maintanance_app/view/homescreen/homescreen.dart';
+import 'package:home_maintanance_app/view/login_screen/login_screen_controller/login-screen_controller.dart';
 
-class RegistrationScreen extends ConsumerWidget {
-  const RegistrationScreen({super.key});
+import 'package:home_maintanance_app/view/registration_screen/registration_screen.dart';
+
+class LoginScreen extends ConsumerWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final repasswordController = TextEditingController();
-    final registrationscreenstate = ref.watch(registrationScreenStateProvider);
+
+    final loginscreenstate = ref.watch(loginScreenStateProvider);
 
     return Scaffold(
       body: Container(
@@ -32,7 +34,7 @@ class RegistrationScreen extends ConsumerWidget {
               ),
               elevation: 8,
               shadowColor: Colors.deepPurple.shade100,
-              child: registrationscreenstate.isLoading
+              child: loginscreenstate.isLoading
                   ? CircularProgressIndicator.adaptive()
                   : Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -43,7 +45,7 @@ class RegistrationScreen extends ConsumerWidget {
                           children: [
                             // Title
                             Text(
-                              "Create Account",
+                              "Welcome Back",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -97,44 +99,35 @@ class RegistrationScreen extends ConsumerWidget {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 16),
-                            // Re-enter Password Field
-                            TextFormField(
-                              controller: repasswordController,
-                              decoration: InputDecoration(
-                                labelText: "Confirm Password",
-                                prefixIcon: Icon(Icons.lock_outline),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: Colors.deepPurple.shade50,
-                              ),
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please confirm your password';
-                                } else if (value != passwordController.text) {
-                                  return 'Passwords do not match';
-                                }
-                                return null;
-                              },
-                            ),
                             const SizedBox(height: 20),
-                            // Register Button
+                            // Login Button
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    // Handle registration logic here
-                                    await ref
-                                        .read(registrationScreenStateProvider
-                                            .notifier)
-                                        .onRegistration(
+                                    ref
+                                        .read(loginScreenStateProvider.notifier)
+                                        .onLogin(
                                             email: emailController.text,
                                             password: passwordController.text,
-                                            context: context);
+                                            context: context)
+                                        .then(
+                                      (value) {
+                                        if (value == true) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Homescreen(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                          emailController.clear();
+                                          passwordController.clear();
+                                        }
+                                      },
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -146,31 +139,32 @@ class RegistrationScreen extends ConsumerWidget {
                                       const EdgeInsets.symmetric(vertical: 16),
                                 ),
                                 child: const Text(
-                                  "Register",
+                                  "Login",
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.blueAccent),
+                                      fontSize: 18, color: Colors.white),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 16),
-                            // Navigate to Login Screen
+                            // Navigate to Registration Screen
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text("Already have an account? "),
+                                const Text("Don't have an account? "),
                                 TextButton(
                                   onPressed: () {
-                                    // Handle navigation to login screen
+                                    // Handle navigation to registration screen
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => LoginScreen(),
+                                        builder: (context) =>
+                                            RegistrationScreen(),
                                       ),
                                       (route) => false,
                                     );
                                   },
                                   child: const Text(
-                                    "Sign in",
+                                    "Sign up",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.deepPurple,

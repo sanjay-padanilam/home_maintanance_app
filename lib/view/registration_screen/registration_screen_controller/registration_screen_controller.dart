@@ -1,19 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_maintanance_app/utils/snackbar_utils.dart';
 import 'package:home_maintanance_app/view/registration_screen/registration_screen_controller/registration_screen_state.dart';
 
-final RegistrationScreenStateProvider = StateNotifierProvider(
-  (ref) => RegistrationScreenStateNotifier(),
-);
+final registrationScreenStateProvider = StateNotifierProvider<
+    RegistrationScreenStateNotifier,
+    RegistrationScreenState>((ref) => RegistrationScreenStateNotifier());
 
 class RegistrationScreenStateNotifier
     extends StateNotifier<RegistrationScreenState> {
   RegistrationScreenStateNotifier() : super(RegistrationScreenState());
 
-  Future<void> onRegistration(
-      {required String email,
-      required String password,
-      required BuildContext}) async {
+  Future<void> onRegistration({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
     state = state.copyWith(isLoading: true);
     try {
       final credential =
@@ -21,11 +24,38 @@ class RegistrationScreenStateNotifier
         email: email,
         password: password,
       );
-      if (credential.user?.uid != null) {}
+
+      if (credential.user?.uid != null) {
+        SnackbarUrils.showOntimeSnackbar(
+          message: "Registration Successfully",
+          context: context,
+          backgroundColor: Colors.green,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-      } else if (e.code == 'email-already-in-use') {}
-    } catch (e) {}
-    state = state.copyWith(isLoading: false);
+        SnackbarUrils.showOntimeSnackbar(
+          message: 'The password provided is too weak.',
+          context: context,
+        );
+      } else if (e.code == 'email-already-in-use') {
+        SnackbarUrils.showOntimeSnackbar(
+          message: 'The account already exists for that email.',
+          context: context,
+        );
+      } else {
+        SnackbarUrils.showOntimeSnackbar(
+          message: 'Registration failed: ${e.code}',
+          context: context,
+        );
+      }
+    } catch (e) {
+      SnackbarUrils.showOntimeSnackbar(
+        message: e.toString(),
+        context: context,
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 }
