@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,14 @@ class RegistrationScreenStateNotifier
       );
 
       if (credential.user?.uid != null) {
+        FirebaseFirestore.instance
+            .collection("user")
+            .doc(credential.user!.uid.toString())
+            .set({
+          "id": "${credential.user!.uid.toString()}",
+          'email': '${credential.user!.email.toString()}'
+        });
+
         SnackbarUrils.showOntimeSnackbar(
           message: "Registration Successfully",
           context: context,
