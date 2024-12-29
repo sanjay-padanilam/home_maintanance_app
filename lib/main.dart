@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_maintanance_app/firebase_options.dart';
 import 'package:home_maintanance_app/view/homescreen/homescreen.dart';
 import 'package:home_maintanance_app/view/registration_screen/registration_screen.dart';
+import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegistrationScreen(),
+      home: ServiceDetailsScreen(),
     );
   }
 }

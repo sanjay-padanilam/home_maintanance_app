@@ -1,144 +1,137 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:home_maintanance_app/view/payment_Screen/payment_Screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_maintanance_app/view/service_Details_Screen/service_details_screen_controller/service_screen_controller.dart';
 
-class ServiceDetailsScreen extends StatefulWidget {
-  final String serviceName;
-  final IconData serviceIcon;
-  final String serviceDescription;
-  final List<String> features;
-
-  ServiceDetailsScreen({
-    required this.serviceName,
-    required this.serviceIcon,
-    required this.serviceDescription,
-    required this.features,
-  });
+class ServiceDetailsScreen extends ConsumerStatefulWidget {
+  final String? servicename;
+  const ServiceDetailsScreen({super.key, this.servicename});
 
   @override
-  _ServiceDetailsScreenState createState() => _ServiceDetailsScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceDetailsScreenState();
 }
 
-class _ServiceDetailsScreenState extends State<ServiceDetailsScreen> {
-  String? _selectedFeature;
+class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _namecontroller = TextEditingController();
+  TextEditingController _placecontroller = TextEditingController();
+  TextEditingController _housenamecontroller = TextEditingController();
+  TextEditingController _phonenumbercontroller = TextEditingController();
 
+  // Regular expression for validating a 10-digit phone number
+  final String phonePattern = r'^[0-9]{10}$';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.serviceName),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              Row(
-                children: [
-                  Icon(widget.serviceIcon, size: 48, color: Colors.blue),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      widget.serviceName,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+        appBar: AppBar(
+          title: Text('service details'),
+        ),
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: <Widget>[
+                  // Name Field
+                  TextFormField(
+                    controller: _namecontroller,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Enter your full name',
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  // Place Field
+                  TextFormField(
+                    controller: _placecontroller,
+                    decoration: InputDecoration(
+                      labelText: 'Place',
+                      hintText: 'Enter your place',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your place';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  // House Name Field
+                  TextFormField(
+                    controller: _housenamecontroller,
+                    decoration: InputDecoration(
+                      labelText: 'House Name',
+                      hintText: 'Enter your house name',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your house name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  // Phone Number Field
+                  TextFormField(
+                    controller: _phonenumbercontroller,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      hintText: 'Enter a 10-digit phone number',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      RegExp regExp = RegExp(phonePattern);
+                      if (!regExp.hasMatch(value)) {
+                        return 'Please enter a valid 10-digit phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 32.0),
+                  // Submit Button
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Processing Data')),
+                        );
+                        ref
+                            .read(ServiceScreenStateProvider.notifier)
+                            .addOrderToFirebase(
+                              context: context,
+                              houseName: _housenamecontroller.text,
+                              name: _namecontroller.text,
+                              phoneNumber: _phonenumbercontroller.text,
+                              place: _placecontroller.text,
+                              serviceName: widget.servicename,
+                              userId: FirebaseAuth.instance.currentUser!.uid
+                                  .toString(),
+                              status: 'pending',
+                            );
+
+                        // Proceed with further processing using the saved values
+                      }
+                    },
+                    child: Text('Submit'),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-
-              // Description Section
-              Text(
-                "About the Service",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                widget.serviceDescription,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 24),
-
-              // Features Section
-              Text(
-                "Choose your service ?..",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 8),
-              Column(
-                children: widget.features.map((feature) {
-                  return RadioListTile<String>(
-                    title: Text(
-                      feature,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    value: feature,
-                    groupValue: _selectedFeature,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedFeature = value;
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-
-              SizedBox(height: 24),
-
-              // Action Button
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_selectedFeature != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('You selected: $_selectedFeature'),
-                        ),
-                      );
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PaymentScreen(),
-                          ));
-                      // Add additional functionality for booking or processing
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please select a feature first!'),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text(
-                    "Book Now",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                    textStyle: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

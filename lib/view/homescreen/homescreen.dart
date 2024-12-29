@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
 class Homescreen extends ConsumerStatefulWidget {
   const Homescreen({super.key});
@@ -152,46 +153,56 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       itemBuilder: (context, index) {
                         final servicelist = snapshot.data!.docs;
 
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          color: Colors.white,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: 20,
-                                top: 20,
-                                child: Container(
-                                  height: screenWidth > 400
-                                      ? 80
-                                      : 60, // Responsive size
-                                  width: screenWidth > 400 ? 80 : 60,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: NetworkImage(
-                                            servicelist[index]['image'])),
-                                    borderRadius: BorderRadius.circular(10),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                ServiceDetailsScreen(servicename: 'plumbing');
+                                return SizedBox();
+                              },
+                            ));
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 5,
+                            color: Colors.white,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 20,
+                                  top: 20,
+                                  child: Container(
+                                    height: screenWidth > 400
+                                        ? 80
+                                        : 60, // Responsive size
+                                    width: screenWidth > 400 ? 80 : 60,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: NetworkImage(
+                                              servicelist[index]['image'])),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: screenWidth > 400 ? 120 : 90,
-                                left: 30,
-                                child: Text(
-                                  servicelist[index]['name'],
-                                  style: TextStyle(
-                                    fontSize: screenWidth > 400
-                                        ? 16
-                                        : 12, // Responsive text size
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
+                                Positioned(
+                                  top: screenWidth > 400 ? 120 : 90,
+                                  left: 30,
+                                  child: Text(
+                                    servicelist[index]['name'],
+                                    style: TextStyle(
+                                      fontSize: screenWidth > 400
+                                          ? 16
+                                          : 12, // Responsive text size
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },
