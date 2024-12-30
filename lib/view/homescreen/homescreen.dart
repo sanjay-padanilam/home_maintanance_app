@@ -155,12 +155,12 @@ class _HomescreenState extends ConsumerState<Homescreen> {
 
                         return InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                ServiceDetailsScreen(servicename: 'plumbing');
-                                return SizedBox();
-                              },
-                            ));
+                            // Navigator.push(context, MaterialPageRoute(
+                            //   builder: (context) {
+                            //     ServiceDetailsScreen(servicename: 'plumbing');
+                            //     return SizedBox();
+                            //   },
+                            // ));
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(
