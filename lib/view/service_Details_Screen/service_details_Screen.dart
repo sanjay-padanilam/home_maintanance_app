@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_maintanance_app/view/service_Details_Screen/service_details_screen_controller/service_screen_controller.dart';
 
 class ServiceDetailsScreen extends ConsumerStatefulWidget {
-  const ServiceDetailsScreen({super.key});
+  final String? servicename;
+  const ServiceDetailsScreen({super.key, this.servicename});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -14,7 +16,7 @@ class ServiceDetailsScreen extends ConsumerStatefulWidget {
 class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
   TextEditingController _detailscontroller = TextEditingController();
   User? currentUser = FirebaseAuth.instance.currentUser;
-
+  @override
   @override
   Widget build(BuildContext context) {
     final serviceDetailsScreen = ref.watch(ServiceScreenStateProvider);
@@ -49,23 +51,32 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  final address = _detailscontroller.text;
-                  if (address.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter an address')),
-                    );
+                onPressed: () async {
+                  // final address = _detailscontroller.text;
+                  // if (address.isEmpty) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(content: Text('Please enter an address')),
+                  //   );
 
-                    ref.read(ServiceScreenStateProvider.notifier).addOrder(
-                        servicename: 'plumbing',
-                        status: 'pending',
-                        details: _detailscontroller.text,
-                        userId: currentUser!.uid.toString());
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Order placed for: $address')),
-                    );
-                  }
+                  // ref.read(ServiceScreenStateProvider.notifier).addOrder(
+                  //     servicename: widget.servicename ?? '',
+                  //     status: 'pending',
+                  //     details: _detailscontroller.text,
+                  //     userId: currentUser!.uid.toString());
+                  // FirebaseFirestore.instance.collection('bookings').add({
+                  //   'userId': FirebaseAuth.instance.currentUser?.uid,
+                  //   'serviceDetails': _detailscontroller.text,
+                  //   'status': 'pending',
+                  //   'timestamp': FieldValue.serverTimestamp(),
+                  // });
+                  // } else {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(content: Text('Order placed for: $address')),
+                  //   );
+                  // }
+                  await ref.read(ServiceScreenStateProvider.notifier).addOrder(
+                      details: _detailscontroller.text,
+                      servicename: widget.servicename.toString());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,

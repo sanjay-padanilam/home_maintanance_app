@@ -2,8 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_maintanance_app/firebase_options.dart';
-import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
-import 'package:home_maintanance_app/view/service_cart/service_cart.dart';
+import 'package:home_maintanance_app/view/homescreen/homescreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ServiceCart(),
+      home: Homescreen(),
     );
   }
 }

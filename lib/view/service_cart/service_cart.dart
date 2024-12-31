@@ -1,10 +1,7 @@
-import 'dart:developer';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_maintanance_app/model/booking_model.dart';
-import 'package:home_maintanance_app/view/service_cart/service_cart_controller/service_cart_controller.dart';
 
 class ServiceCart extends ConsumerStatefulWidget {
   const ServiceCart({super.key});
@@ -19,95 +16,39 @@ class ServiceCartState extends ConsumerState<ServiceCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple.shade400,
-        title: Text('Order List'),
-      ),
-      body: StreamBuilder<List<OrderModel>>(
-        stream: ref
-            .read(ServiceCartStateProvider.notifier)
-            .fetchUserOrders(user!.uid.toString()),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError || !snapshot.hasData) {
-            return Center(
-                child: Text('Error fetching orders: ${snapshot.error}'));
-          }
-
-          final orders = snapshot.data!;
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              log(order.toString());
-
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text(
-                        order.servicename.toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: order.status.toLowerCase() == 'approved'
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Order Approved",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                          : order.status.toLowerCase() == 'rejected'
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Order Rejected",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Order Pending",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
+        backgroundColor: Colors.deepPurple.shade200,
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurple.shade400,
+          title: Text('Order List'),
+        ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('bookings')
+              .where('userId',
+                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return CircularProgressIndicator();
+            final bookings = snapshot.data!.docs;
+            return ListView.builder(
+              itemCount: bookings.length,
+              itemBuilder: (context, index) {
+                final booking = bookings[index];
+                return Card(
+                  child: ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(booking['service name']),
+                        Text("Adress: ${booking['serviceDetails']}"),
+                      ],
                     ),
-                    SizedBox(height: 8),
-                    if (order.status.toLowerCase() == 'pending')
-                      Text(
-                        'Please wait while we process your order.',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    if (order.status.toLowerCase() == 'approved')
-                      Text(
-                        'Our executive will contact you soon.',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    Divider(height: 12),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
+                    subtitle: Text('Status: ${booking['status']}'),
+                  ),
+                );
+              },
+            );
+          },
+        ));
   }
 }
