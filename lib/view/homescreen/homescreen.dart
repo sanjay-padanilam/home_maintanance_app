@@ -77,6 +77,13 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       Navigator.pop(context);
                     },
                   ),
+                  ListTile(
+                    leading: Icon(Icons.book_online),
+                    title: Text('Bookings'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -87,9 +94,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                 leading: Icon(Icons.logout),
                 title: Text('Logout'),
                 onTap: () {
-                  // Add your logout logic here
-                  Navigator.pop(context); // Close the drawer
-                  // Perform logout actions (e.g., clear user session, navigate to login screen)
+                  Navigator.pop(context);
                 },
               ),
             ),
