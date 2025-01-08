@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_maintanance_app/view/homescreen/homescreen_cotroller/homescreen_controller.dart';
 
 import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
@@ -16,6 +18,21 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   final Stream<QuerySnapshot> _servicesStream =
       FirebaseFirestore.instance.collection('services').snapshots();
   @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        final user = FirebaseAuth.instance.currentUser;
+
+        await ref
+            .read(HomescreenStateProvider.notifier)
+            .fetchUsername(user!.uid.toString());
+      },
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Get screen dimensions
     final screenWidth = MediaQuery.of(context).size.width;
@@ -23,6 +40,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
 
     // Determine grid column count based on screen width
     final gridCrossAxisCount = screenWidth > 600 ? 3 : 2;
+    final homescreenstate = ref.watch(HomescreenStateProvider);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -110,7 +128,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Welcome, Sanjay",
+                        "Welcome, ${homescreenstate.name}",
                         style: TextStyle(
                           fontSize: screenWidth > 400
                               ? 24

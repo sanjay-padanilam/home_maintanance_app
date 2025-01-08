@@ -1,8 +1,11 @@
 class HomescreenState {
   String? name;
-  HomescreenState({this.name});
+  bool isLoading;
 
-  HomescreenState copyWith({String? name}) {
-    return HomescreenState(name: name ?? this.name);
+  HomescreenState({this.name, this.isLoading = false});
+
+  HomescreenState copyWith({String? name, bool? isLoading}) {
+    return HomescreenState(
+        name: name ?? this.name, isLoading: isLoading ?? this.isLoading);
   }
 }
