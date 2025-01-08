@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:home_maintanance_app/view/service_Details_Screen/service_details_Screen.dart';
 
 class Homescreen extends ConsumerStatefulWidget {
@@ -14,7 +15,6 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Stream<QuerySnapshot> _servicesStream =
       FirebaseFirestore.instance.collection('services').snapshots();
-
   @override
   Widget build(BuildContext context) {
     // Get screen dimensions

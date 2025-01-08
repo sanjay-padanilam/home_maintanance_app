@@ -13,12 +13,14 @@ class RegistrationScreenStateNotifier
     extends StateNotifier<RegistrationScreenState> {
   RegistrationScreenStateNotifier() : super(RegistrationScreenState());
 
-  Future<void> onRegistration({
+  Future<bool> onRegistration({
     required String email,
     required String password,
+    required String username,
     required BuildContext context,
   }) async {
     state = state.copyWith(isLoading: true);
+
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -27,44 +29,47 @@ class RegistrationScreenStateNotifier
       );
 
       if (credential.user?.uid != null) {
-        FirebaseFirestore.instance
-            .collection("user")
-            .doc(credential.user!.uid.toString())
+        const userCollection = "user";
+        await FirebaseFirestore.instance
+            .collection(userCollection)
+            .doc(credential.user!.uid)
             .set({
-          "id": "${credential.user!.uid.toString()}",
-          'email': '${credential.user!.email.toString()}'
+          "id": credential.user!.uid,
+          'email': credential.user!.email,
+          'username': username,
         });
 
         SnackbarUrils.showOntimeSnackbar(
-          message: "Registration Successfully",
+          message: "Registration Successful",
           context: context,
           backgroundColor: Colors.green,
         );
+        return true;
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        SnackbarUrils.showOntimeSnackbar(
-          message: 'The password provided is too weak.',
-          context: context,
-        );
-      } else if (e.code == 'email-already-in-use') {
-        SnackbarUrils.showOntimeSnackbar(
-          message: 'The account already exists for that email.',
-          context: context,
-        );
-      } else {
-        SnackbarUrils.showOntimeSnackbar(
-          message: 'Registration failed: ${e.code}',
-          context: context,
-        );
+      String errorMessage;
+      switch (e.code) {
+        case 'weak-password':
+          errorMessage = 'The password provided is too weak.';
+          break;
+        case 'email-already-in-use':
+          errorMessage = 'The account already exists for that email.';
+          break;
+        default:
+          errorMessage = 'Registration failed: ${e.code}';
       }
+      SnackbarUrils.showOntimeSnackbar(
+        message: errorMessage,
+        context: context,
+      );
     } catch (e) {
       SnackbarUrils.showOntimeSnackbar(
-        message: e.toString(),
+        message: 'An unexpected error occurred: ${e.toString()}',
         context: context,
       );
     } finally {
       state = state.copyWith(isLoading: false);
     }
+    return false;
   }
 }

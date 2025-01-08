@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_maintanance_app/view/homescreen/homescreen.dart';
 import 'package:home_maintanance_app/view/login_screen/login_screen.dart';
 import 'package:home_maintanance_app/view/registration_screen/registration_screen_controller/registration_screen_controller.dart';
 
@@ -10,6 +11,8 @@ class RegistrationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
+
+    final nameController = TextEditingController();
     final passwordController = TextEditingController();
     final repasswordController = TextEditingController();
     final registrationscreenstate = ref.watch(registrationScreenStateProvider);
@@ -50,6 +53,27 @@ class RegistrationScreen extends ConsumerWidget {
                                 color: Colors.deepPurple,
                               ),
                             ),
+                            const SizedBox(height: 20),
+
+                            TextFormField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                labelText: "Enter your Full Name",
+                                prefixIcon: Icon(Icons.person),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                filled: true,
+                                fillColor: Colors.deepPurple.shade50,
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your username';
+                                } else
+                                  return null;
+                              },
+                            ),
+
                             const SizedBox(height: 20),
                             // Email Field
                             TextFormField(
@@ -134,7 +158,22 @@ class RegistrationScreen extends ConsumerWidget {
                                         .onRegistration(
                                             email: emailController.text,
                                             password: passwordController.text,
-                                            context: context);
+                                            context: context,
+                                            username: nameController.text)
+                                        .then(
+                                      (value) {
+                                        if (value == true) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Homescreen(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        }
+                                      },
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
